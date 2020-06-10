@@ -5,13 +5,14 @@ LABEL maintainer="Carlos Augusto Malucelli <camalucelli@gmail.com>"
 WORKDIR /alertmanager-webhook-telegram
 
 RUN apk update \
-                && apk add py-pip bash gcc python-dev musl-dev libffi-dev openssl-dev unzip \
+                && apk add git py3-pip bash gcc python3-dev musl-dev libffi-dev openssl-dev unzip tzdata \
                 && rm -rf /var/cache/apk/* \
-                && wget https://github.com/nopp/alertmanager-webhook-telegram-python/archive/master.zip \
-                && unzip -j master.zip  \
-                && pip install -r requirements.txt \
-                && chmod +x run.sh
+                && git clone https://github.com/qq516249940/alertmanager-webhook-telegram-python.git . \
+                && git checkout dev  \
+                && pip3 install -r requirements.txt \
+                && chmod +x docker/run.sh 
+             
 
 EXPOSE 9119
 
-ENTRYPOINT ["./run.sh"]
+ENTRYPOINT ["./docker/run.sh"]
