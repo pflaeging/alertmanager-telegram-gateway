@@ -1,8 +1,9 @@
-import telegram, json, logging
+import telegram, json, logging, sys
 from dateutil import parser
 from flask import Flask
 from flask import request
 from flask_basicauth import BasicAuth
+
 
 app = Flask(__name__)
 app.secret_key = 'lAlAlA123'
@@ -24,7 +25,7 @@ def postAlertmanager():
 
     try:
         content = json.loads(request.get_data())
-        print(json.dumps(content, indent=2))
+        print(json.dumps(content, indent=2), file=sys.stderr)
         for alert in content['alerts']:
             message = "Status: "+alert['status']+"\n"
             if 'name' in alert['labels']:
