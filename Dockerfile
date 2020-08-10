@@ -12,7 +12,7 @@ RUN apk update \
 ADD run.sh .
 ADD flaskAlert.py .
 ADD requirements.txt .
-RUN pip3 install.txt -r requirements.txt && \
+RUN pip3 install -r requirements.txt && \
     chmod 775 run.sh
 
 EXPOSE 9119
