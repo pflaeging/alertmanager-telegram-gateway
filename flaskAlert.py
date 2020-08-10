@@ -24,6 +24,7 @@ def postAlertmanager():
 
     try:
         content = json.loads(request.get_data())
+        print(json.dumps(content, indent=2))
         for alert in content['alerts']:
             message = "Status: "+alert['status']+"\n"
             if 'name' in alert['labels']:
