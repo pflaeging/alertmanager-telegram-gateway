@@ -1,0 +1,37 @@
+{
+  "receiver": "Default",
+  "status": "firing",
+  "alerts": [
+    {
+      "status": "firing",
+      "labels": {
+        "alertname": "KubeAPIErrorsHigh",
+        "prometheus": "openshift-monitoring/k8s",
+        "resource": "hostsubnets",
+        "severity": "warning",
+        "verb": "LIST"
+      },
+      "annotations": {
+        "message": "API server is returning errors for 100% of requests for LIST hostsubnets ."
+      },
+      "startsAt": "2020-08-06T05:13:50.907Z",
+      "endsAt": "0001-01-01T00:00:00Z",
+      "generatorURL": "https://prometheus-k8s-openshift-monitoring.apps.fangorn.pfpk.pro/graph?g0.expr=sum+by%28resource%2C+subresource%2C+verb%29+%28rate%28apiserver_request_total%7Bcode%3D~%225..%22%2Cjob%3D%22apiserver%22%7D%5B5m%5D%29%29+%2F+sum+by%28resource%2C+subresource%2C+verb%29+%28rate%28apiserver_request_total%7Bjob%3D%22apiserver%22%7D%5B5m%5D%29%29+%3E+0.05&g0.tab=1",
+      "fingerprint": "49bc49435490389c"
+    }
+  ],
+  "groupLabels": {},
+  "commonLabels": {
+    "alertname": "KubeAPIErrorsHigh",
+    "prometheus": "openshift-monitoring/k8s",
+    "resource": "hostsubnets",
+    "severity": "warning",
+    "verb": "LIST"
+  },
+  "commonAnnotations": {
+    "message": "API server is returning errors for 100% of requests for LIST hostsubnets ."
+  },
+  "externalURL": "https://alertmanager-main-openshift-monitoring.apps.fangorn.pfpk.pro",
+  "version": "4",
+  "groupKey": "{}:{}"
+}

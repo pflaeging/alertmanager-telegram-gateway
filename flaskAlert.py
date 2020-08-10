@@ -29,12 +29,12 @@ def postAlertmanager():
         app.logger.debug(json.dumps(content, indent=2))
         for alert in content['alerts']:
             message = "Status: "+alert['status']+"\n"
-            if 'name' in alert['labels']:
-                message += "Instance: "+alert['labels']['instance']+"("+alert['labels']['name']+")\n"
+            if 'resource' in alert['labels']:
+                message += "Alert: "+alert['labels']['alertname']+"("+alert['labels']['resource']+")\n"
             else:
-                message += "Instance: "+alert['labels']['instance']+"\n"
-            if 'info' in alert['annotations']:
-                message += "Info: "+alert['annotations']['info']+"\n"
+                message += "Alert: "+alert['labels']['alertname']+"\n"
+            if 'message' in alert['annotations']:
+                message += "Message: "+alert['annotations']['message']+"\n"
             if 'summary' in alert['annotations']:
                 message += "Summary: "+alert['annotations']['summary']+"\n"                
             if 'description' in alert['annotations']:
@@ -51,10 +51,3 @@ def postAlertmanager():
         bot.sendMessage(chat_id=chatID, text="Error to read json: "+str(error))
         app.logger.info("\t%s",error)
         return "Alert fail", 200
-
-""" if __name__ == '__main__':
-    gunicorn_logger = logging.getLogger('gunicorn.error')
-    app.logger.handlers = gunicorn_logger.handlers
-    app.logger.setLevel(gunicorn_logger.level)
-    app.run(host='0.0.0.0', port=9119, debug=True)
- """
