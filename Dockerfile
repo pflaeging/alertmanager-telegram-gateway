@@ -19,4 +19,4 @@ EXPOSE 9119
 
 ENTRYPOINT ["./run.sh"]
 
-CMD ["/usr/bin/waitress-serve", "--host=0.0.0.0", "--port=9119", "flaskAlert"]
+CMD ["/usr/bin/python3", "flaskAlert.py"]

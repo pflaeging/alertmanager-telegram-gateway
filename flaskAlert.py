@@ -3,6 +3,7 @@ from dateutil import parser
 from flask import Flask
 from flask import request
 from flask_basicauth import BasicAuth
+from waitress import serve
 
 
 app = Flask(__name__)
@@ -51,3 +52,6 @@ def postAlertmanager():
         bot.sendMessage(chat_id=chatID, text="Error to read json: "+str(error))
         app.logger.info("\t%s",error)
         return "Alert fail", 200
+
+if __name__ == "__main__":
+    serve(app, listen='*:9119')
