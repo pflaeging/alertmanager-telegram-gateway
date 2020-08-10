@@ -24,6 +24,7 @@ bot = telegram.Bot(token="botToken")
 def postAlertmanager():
 
     try:
+        app.logger.setLevel(logging.DEBUG)
         content = json.loads(request.get_data())
         app.logger.debug(json.dumps(content, indent=2))
         for alert in content['alerts']:
@@ -51,8 +52,9 @@ def postAlertmanager():
         app.logger.info("\t%s",error)
         return "Alert fail", 200
 
-if __name__ == '__main__':
+""" if __name__ == '__main__':
     gunicorn_logger = logging.getLogger('gunicorn.error')
     app.logger.handlers = gunicorn_logger.handlers
     app.logger.setLevel(gunicorn_logger.level)
     app.run(host='0.0.0.0', port=9119, debug=True)
+ """
