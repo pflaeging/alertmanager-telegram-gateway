@@ -53,4 +53,4 @@ def postAlertmanager():
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
-    app.run(host='0.0.0.0', port=9119)
+    app.run(host='0.0.0.0', port=9119, debug=True)
