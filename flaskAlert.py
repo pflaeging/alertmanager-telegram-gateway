@@ -25,7 +25,7 @@ def postAlertmanager():
 
     try:
         content = json.loads(request.get_data())
-        print(json.dumps(content, indent=2), file=sys.stderr)
+        app.logger.debug(json.dumps(content, indent=2))
         for alert in content['alerts']:
             message = "Status: "+alert['status']+"\n"
             if 'name' in alert['labels']:
@@ -52,5 +52,5 @@ def postAlertmanager():
         return "Alert fail", 200
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.DEBUG)
     app.run(host='0.0.0.0', port=9119)
