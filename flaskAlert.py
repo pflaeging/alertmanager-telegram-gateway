@@ -52,5 +52,7 @@ def postAlertmanager():
         return "Alert fail", 200
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)
+    gunicorn_logger = logging.getLogger('gunicorn.error')
+    app.logger.handlers = gunicorn_logger.handlers
+    app.logger.setLevel(gunicorn_logger.level)
     app.run(host='0.0.0.0', port=9119, debug=True)
