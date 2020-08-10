@@ -2,7 +2,7 @@ FROM alpine:3.7
 
 LABEL maintainer="Peter Pflaeging <peter@pflaeging.net"
 
-RUN mkdir --mode 775 /alertmanger-webhook-telegram
+RUN mkdir -p -m 775 /alertmanger-webhook-telegram
 WORKDIR /alertmanger-webhook-telegram
 
 RUN apk update \
