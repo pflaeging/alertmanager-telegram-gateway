@@ -18,3 +18,5 @@ RUN pip3 install -r requirements.txt && \
 EXPOSE 9119
 
 ENTRYPOINT ["./run.sh"]
+
+CMD ["/usr/bin/flask", "run", "--host 0.0.0.0", "--port 9119"]

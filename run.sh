@@ -32,4 +32,5 @@ sed -i s/XXXUSERNAME/"$username"/ flaskAlert.py
 sed -i s/XXXPASSWORD/"$password"/ flaskAlert.py
 
 export FLASK_APP=flaskAlert.py
-/usr/bin/flask --host 0.0.0.0 --port 9119
+
+exec $@
