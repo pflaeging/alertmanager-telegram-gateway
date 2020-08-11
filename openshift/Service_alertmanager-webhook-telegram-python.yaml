@@ -1,0 +1,20 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: alertmanager-webhook-telegram-python
+  labels:
+    app: alertmanager-webhook-telegram-python
+    pflaging.net/service: webhook-telegram-python
+    pflaeging.net/instance: alertmanager
+spec:
+  ports:
+    - name: 9119-tcp
+      protocol: TCP
+      port: 9119
+      targetPort: 9119
+  selector:
+    app: alertmanager-webhook-telegram-python
+  type: ClusterIP
+  sessionAffinity: None
+status:
+  loadBalancer: {}

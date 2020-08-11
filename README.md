@@ -1,63 +1,66 @@
-# Alertmanager webhook for Telegram (Python Version)
+# AlertManager WebHook for Telegram notifications
 
-GO Version (https://github.com/nopp/alertmanager-webhook-telegram-go)
+This is a small gateway between OKD / OpenShift AlertManager (prometheus) and telegram written in python (flask).
 
-Python version 3
+It should be run in a separate namespace and uses only two secrets for configuration.
 
-## INSTALL
+## First: create a telegram bot
 
-* pip install -r requirements.txt
+- Login to telegram (web or app)
+- search @BotFather
+- `/newbot`
+- give it a name aka `myfamoustest`
+- give it a username aka `MyFamousTestBot` (must end with bot or Bot)
+- now you get an API token like this one back: `1334834688:AAH8qx8nu-GR9thPnxxXXt7h1iPLTJJh6jYs` <- remember this!
+- go to 'tg://resolve?domain=MyFamousTestBot' and start your bot
 
-Change on flaskAlert.py
-=======================
-* botToken
-* chatID
+Great you now have a bot. A bot is like a normal telegram user for automation (with some restrictions).
 
-If you'll use with authentication, change too
+## Second: create a private channel for your alerts
 
-* XXXUSERNAME
-* XXXPASSWORD
+- create a new group in telegram with you and your bot
+- look at the URL if you are in the group while in telegram web. The number at the end (something like `/im?p=g12345678` => 12345678) is your chat_id!
+- now you have:
+  - your API token: `1334834688:AAH8qx8nu-GR9thPnxxXXt7h1iPLTJJh6jYs`
+  - your chat_id: `12345678`
 
-Disabling authentication
-========================
-On flaskAlert.py change app.config['BASIC_AUTH_FORCE'] = True to app.config['BASIC_AUTH_FORCE'] = False
+Send a test message to your alert channel:
 
-Alertmanager configuration example
-==================================
+`curl -vv "https://api.telegram.org/bot[Your API token]/sendMessage?chat_id=-[your chat_id]&text=Hoooray, it is working"`
 
-	receivers:
-	- name: 'telegram-webhook'
-	  webhook_configs:
-	  - url: http://ipFlaskAlert:9119/alert
-	    send_resolved: true
-	    http_config:
-	      basic_auth:
-		username: 'admin'
-		password: 'password'
+## Third: establish your gateway
 
-One way to get the chat ID
-==========================
-1) Access https://web.telegram.org/
-2) Click to specific chat to the left
-3) At the url, you can get the chat ID(Ex: https://web.telegram.org/#/im?p=g1234567, so the chatID is 1234567)
+The webhook-telegram-python gateway makes the translation between the JSON alertmanager output (example in ./default.json) and the telegram bot.
 
-Running
-=======
-* python flaskAlert.py
+- Deploy the pod (examples are in the directory ./openshift)
+- put your bot-config from above in the secret ./openshift/Secret_bot-config.yaml (base64 encoded: `echo 12345678 | base64`for ex.)
+- establish a username / password combo for your gateway and put it in ./openshift/Secret_alertmanager-login.yaml
+- create a route like in ./openshift/Route_alertmanager-telegram.yaml
 
-Running on docker
-=================
-    git clone https://github.com/nopp/alertmanager-webhook-telegram.git
-    cd alertmanager-webhook-telegram/docker/
-    docker build -t alertmanager-webhook-telegram:1.0 .
+Test your work with
 
-    docker run -d --name telegram-bot \
-    	-e "bottoken=telegramBotToken" \
-    	-e "chatid=telegramChatID" \
-    	-e "username=<username>" \
-    	-e "password=<password>" \
-    	-p 9119:9119 alertmanager-webhook-telegram:1.0
+```shell
+curl -vv -k -XPOST --data @example.json https://myusernameforgateway:mypasswordforgateway@webhook-telegram-alertmanager-telegram.apps.myfamous-cluster.net/alert
+```
 
-Example to test
-===============
-	curl -XPOST --data '{"status":"resolved","groupLabels":{"alertname":"instance_down"},"commonAnnotations":{"description":"i-0d7188fkl90bac100 of job ec2-sp-node_exporter has been down for more than 2 minutes.","summary":"Instance i-0d7188fkl90bac100 down"},"alerts":[{"status":"resolved","labels":{"name":"olokinho01-prod","instance":"i-0d7188fkl90bac100","job":"ec2-sp-node_exporter","alertname":"instance_down","os":"linux","severity":"page"},"endsAt":"2019-07-01T16:16:19.376244942-03:00","generatorURL":"http://pmts.io:9090","startsAt":"2019-07-01T16:02:19.376245319-03:00","annotations":{"description":"i-0d7188fkl90bac100 of job ec2-sp-node_exporter has been down for more than 2 minutes.","summary":"Instance i-0d7188fkl90bac100 down"}}],"version":"4","receiver":"infra-alert","externalURL":"http://alm.io:9093","commonLabels":{"name":"olokinho01-prod","instance":"i-0d7188fkl90bac100","job":"ec2-sp-node_exporter","alertname":"instance_down","os":"linux","severity":"page"}}' http://username:password@flaskAlert:9119/alert
+You should get a well formated warnning now!
+
+## Fourth: use this as alert receiver in OKD / OpenShift (4)
+
+-  log in the web console of OKD / OpenShift as admin user
+- Administration -> Cluster Settings -> Global Configuration -> Alertmanager
+- for example edit the "Default" receiver:
+  - Receiver Type: "Webhook"
+	- URL: "https://myusernameforgateway:mypasswordforgateway@webhook-telegram-alertmanager-telegram.apps.myfamous-cluster.net/alert"
+	- Save
+
+Your set!
+
+# Cudos
+
+This work is derived from: https://github.com/qq516249940/alertmanager-webhook-telegram-python
+
+
+
+---
+Peter Pflaeging <peter@pflaeging.net>
