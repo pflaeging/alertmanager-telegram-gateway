@@ -12,6 +12,7 @@ RUN apk update \
 ADD run.sh .
 ADD flaskAlert.py .
 ADD requirements.txt .
+ENV CRYPTOGRAPHY_DONT_BUILD_RUST=1
 RUN pip3 install -r requirements.txt && \
     chmod 775 run.sh
 
