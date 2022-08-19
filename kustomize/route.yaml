@@ -5,7 +5,6 @@ metadata:
   labels:
     app: alertmanager-webhook-telegram-python
 spec:
-  host: webhook-telegram-alertmanager-telegram.apps.myfamous-cluster.net
   to:
     kind: Service
     name: alertmanager-webhook-telegram-python

@@ -7,7 +7,7 @@ services:
     - 9119:9119/tcp
     restart: always
     environment:
-      TZ: Asia/Shanghai
+      TZ: Austria/Vienna
       bottoken: xxx
       chatid: 3xxxx
       username: xxx

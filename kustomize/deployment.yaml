@@ -11,14 +11,12 @@ spec:
       app: alertmanager-webhook-telegram-python
   template:
     metadata:
-      creationTimestamp: null
       labels:
         app: alertmanager-webhook-telegram-python
     spec:
       containers:
         - name: alertmanager-webhook-telegram-python
-          image: >-
-            image-registry.openshift-image-registry.svc:5000/sb/alertmanager-webhook-telegram-python:production
+          image: reg.pflaeging.net/k8s-tools/alertmanager-webhook-telegram-python:production
           envFrom:
             - secretRef:
                 name: alertmanager-login
@@ -27,11 +25,23 @@ spec:
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
           imagePullPolicy: Always
-          resources: {}
+          securityContext: 
+            seccompProfile: 
+              type: RuntimeDefault
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            capabilities:
+              drop: ["ALL"]
+          resources:
+            requests:
+              cpu: '200m'
+              memory: '20Mi'
+            limits:
+              cpu: '400m'
+              memory: '100Mi'
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
       dnsPolicy: ClusterFirst
-      securityContext: {}
       schedulerName: default-scheduler
   strategy:
     type: RollingUpdate

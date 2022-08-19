@@ -1,4 +1,4 @@
-FROM alpine:3
+FROM alpine:3.7
 
 LABEL maintainer="Peter Pflaeging <peter@pflaeging.net"
 
