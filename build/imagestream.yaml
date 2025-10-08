@@ -1,0 +1,6 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  labels:
+    app: alertmanager-webhook-telegram-python
+  name: alertmanager-webhook-telegram-python

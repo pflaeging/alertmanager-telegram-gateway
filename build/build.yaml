@@ -1,0 +1,39 @@
+kind: BuildConfig
+apiVersion: build.openshift.io/v1
+metadata:
+  name: alertmanager-webhook-telegram-python
+  labels:
+    app: alertmanager-webhook-telegram-python
+    app.kubernetes.io/component: alertmanager-webhook-telegram-python
+    app.kubernetes.io/instance: alertmanager-webhook-telegram-python
+    app.kubernetes.io/part-of: alertmanager-webhook-telegram-python
+spec:
+  resources:
+    requests:
+      cpu: "500m"
+      memory: "512Mi"
+    limits:
+      cpu: "1000m"
+      memory: "1024Mi"
+  output:
+    to:
+      kind: ImageStreamTag
+      name: alertmanager-webhook-telegram-python:latest
+  successfulBuildsHistoryLimit: 5
+  failedBuildsHistoryLimit: 5
+  strategy:
+    type: Docker
+    dockerStrategy:
+      dockerfilePath: Dockerfile
+  postCommit: {}
+  source:
+    type: Git
+    git:
+      uri: https://gitlab.pflaeging.net/pflaeging-net/alertmanager-webhook-telegram-python.git
+      ref: main
+    contextDir: /
+    sourceSecret:
+      name: bulder
+  triggers:
+    - type: ConfigChange
+  runPolicy: Serial
